@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【デモ】住宅仕様決定アプリ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <div class="container mx-auto p-4 max-w-7xl">
+    <header class="bg-white p-4 rounded-lg shadow-md mb-4">
+      <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-700">住宅仕様決定アプリ (デモ)</h1>
+        <a href="#" onclick="showManual()" class="text-sm text-blue-600 hover:underline">操作マニュアルを見る</a>
+      </div>
+      <div class="mt-4 flex flex-wrap items-center gap-4">
+        <input type="text" value="サンプル顧客" disabled class="flex-grow p-2 border rounded-md bg-gray-100">
+        <button class="bg-blue-600 text-white font-bold py-2 px-4 rounded-md opacity-50 cursor-not-allowed">新規案件 開始</button>
+        <button class="bg-green-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 transition">案件読込</button>
+      </div>
+      <div class="text-sm text-gray-600 mt-2">案件名: サンプル顧客様邸 (編集中)</div>
+    </header>
+
+    <main class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div class="lg:col-span-1 bg-white p-4 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-3 border-b pb-2">1. 項目選択</h2>
+        <div class="space-y-2">
+            <button class="w-full text-left p-3 bg-blue-100 rounded-md ring-2 ring-blue-500 transition">キッチン</button>
+            <button class="w-full text-left p-3 bg-gray-100 rounded-md hover:bg-blue-100 transition">バス</button>
+            <button class="w-full text-left p-3 bg-gray-100 rounded-md hover:bg-blue-100 transition">トイレ</button>
+            <button class="w-full text-left p-3 bg-gray-100 rounded-md hover:bg-blue-100 transition">外壁</button>
+            <button class="w-full text-left p-3 bg-gray-100 rounded-md hover:bg-blue-100 transition">屋根</button>
+        </div>
+      </div>
+      <div class="lg:col-span-2 bg-white p-4 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-3 border-b pb-2">2. 仕様一覧</h2>
+        <div class="space-y-3">
+          <div class="bg-gray-50 p-3 rounded-lg border">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                <div class="md:col-span-3">
+                    <p class="font-bold text-lg">ステディア</p>
+                    <p class="text-sm text-gray-600">キッチン | クリナップ</p>
+                    <p class="text-xs text-gray-500 mt-1"><b>品番:</b> ST-2024 | <b>デザイン:</b> スタイリッシュウッド</p>
+                    <p class="text-xs text-blue-600 mt-1"><b>備考:</b> 食洗機付きモデル</p>
+                </div>
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-2"><label class="text-sm font-semibold">数量:</label><input type="number" value="1" class="w-20 p-1 border rounded-md"></div>
+                    <div class="mt-2"><label class="text-sm font-semibold">使用場所・メモ:</label><input type="text" value="1F" placeholder="例: 1Fトイレ" class="w-full p-1 border rounded-md"></div>
+                </div>
+            </div>
+            <div class="flex justify-between items-center mt-2 pt-2 border-t">
+                <p class="text-lg font-semibold text-gray-800">¥429,598</p>
+                <button class="text-red-500 hover:text-red-700 font-bold py-1 px-2 rounded">削除</button>
+            </div>
+          </div>
+          <p class="text-gray-500 text-center py-4">これ以上商品はありません</p>
+        </div>
+        <button class="mt-4 text-sm bg-green-500 text-white font-bold py-1 px-3 rounded-md hover:bg-green-600 transition">+ 特注品を追加</button>
+        <div class="mt-6 text-right">
+          <p class="text-2xl font-bold">総合計: <span class="text-red-600">¥429,598</span></p>
+        </div>
+        <div class="mt-6 pt-4 border-t flex justify-end gap-4">
+          <button class="bg-purple-600 text-white font-bold py-2 px-6 rounded-md hover:bg-purple-700 transition">履歴確認</button>
+          <button class="bg-gray-500 text-white font-bold py-2 px-6 rounded-md hover:bg-gray-600 transition">一時保存</button>
+          <button class="bg-yellow-500 text-white font-bold py-2 px-6 rounded-md hover:bg-yellow-600 transition">承認サイン</button>
+          <button class="bg-red-600 text-white font-bold py-2 px-6 rounded-md hover:bg-red-700 transition">プランシート作成 (PDF)</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Product Modal (Mockup) -->
+  <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-60 z-40 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl flex flex-col">
+      <div class="p-4 border-b flex justify-between items-center flex-shrink-0">
+        <h3 class="text-xl font-bold">項目: キッチン</h3>
+        <button onclick="document.getElementById('product-modal').classList.add('hidden')" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+      </div>
+      <div class="p-6 overflow-y-auto" style="max-height: calc(100vh - 180px);">
+          <div class="bg-gray-100 p-4 rounded-lg mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div><label class="block text-sm font-medium text-gray-700">メーカー名</label><select class="mt-1 block w-full p-2 border rounded-md bg-white"><option>すべて</option><option>タカラスタンダード</option><option>クリナップ</option></select></div>
+              <div><label class="block text-sm font-medium text-gray-700">品名</label><select class="mt-1 block w-full p-2 border rounded-md bg-white"><option>すべて</option></select></div>
+              <div><label class="block text-sm font-medium text-gray-700">品番・カラー</label><select class="mt-1 block w-full p-2 border rounded-md bg-white"><option>すべて</option></select></div>
+              <div><label class="block text-sm font-medium text-gray-700">デザイン</label><select class="mt-1 block w-full p-2 border rounded-md bg-white"><option>すべて</option></select></div>
+          </div>
+          <h4 class="text-lg font-semibold mb-3">商品リスト</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div class="rounded-lg p-3 cursor-pointer transition flex flex-col border"><img src="https://placehold.co/300x200/e2e8f0/a0aec0?text=Kitchen+A" class="w-full h-32 object-cover rounded-md mb-2"><div class="flex-grow"><h4 class="font-semibold">オフェリア</h4><p class="text-sm text-gray-600">タカラスタンダード</p></div><p class="text-lg font-bold text-gray-800 mt-2">¥473,937</p></div>
+            <div class="rounded-lg p-3 cursor-pointer transition flex flex-col border-2 border-blue-500 shadow-lg"><img src="https://placehold.co/300x200/e2e8f0/a0aec0?text=Kitchen+B" class="w-full h-32 object-cover rounded-md mb-2"><div class="flex-grow"><h4 class="font-semibold">ステディア</h4><p class="text-sm text-gray-600">クリナップ</p></div><p class="text-lg font-bold text-gray-800 mt-2">¥429,598</p></div>
+            <div class="rounded-lg p-3 cursor-pointer transition flex flex-col border"><img src="https://placehold.co/300x200/e2e8f0/a0aec0?text=Kitchen+C" class="w-full h-32 object-cover rounded-md mb-2"><div class="flex-grow"><h4 class="font-semibold">クリナップ t p</h4><p class="text-sm text-gray-600">クリナップ</p></div><p class="text-lg font-bold text-gray-800 mt-2">¥561,334</p></div>
+          </div>
+          <div class="mt-8">
+            <h4 class="text-lg font-semibold mb-3 border-t pt-6">施工事例ギャラリー</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div class="border rounded-lg p-3 bg-gray-50"><img src="https://placehold.co/300x200/e2e8f0/a0aec0?text=Example+1" class="w-full h-40 object-cover rounded-md mb-3"><p class="text-sm text-gray-600 mt-1">ステディアを使用したモダンなキッチン事例です。</p></div>
+              <div class="border rounded-lg p-3 bg-gray-50"><img src="https://placehold.co/300x200/e2e8f0/a0aec0?text=Example+2" class="w-full h-40 object-cover rounded-md mb-3"><p class="text-sm text-gray-600 mt-1">白を基調とした清潔感のある空間。</p></div>
+            </div>
+          </div>
+      </div>
+      <div class="p-4 border-t flex justify-between items-center flex-shrink-0">
+        <button class="bg-gray-500 text-white font-bold py-2 px-6 rounded-md hover:bg-gray-600 transition">選択解除</button>
+        <div>
+          <button onclick="document.getElementById('product-modal').classList.add('hidden')" class="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-md hover:bg-gray-400">キャンセル</button>
+          <button class="ml-4 bg-blue-600 text-white font-bold py-2 px-6 rounded-md hover:bg-blue-700 transition">この商品を選択</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manual Modal (Mockup) -->
+  <div id="manual-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+          <div class="p-4 border-b flex justify-between items-center">
+              <h2 class="text-2xl font-bold">操作マニュアル</h2>
+              <button onclick="document.getElementById('manual-modal').classList.add('hidden')" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+          </div>
+          <div class="p-8 overflow-y-auto">
+              <!-- Content from manual.html goes here -->
+              <div class="space-y-12">
+                <section><h2 class="text-2xl font-semibold border-b pb-3 mb-4 text-blue-700">1. 案件の開始と読込</h2><div class="space-y-4"><div><h3 class="text-lg font-semibold">新規案件を開始する場合</h3><ol class="list-decimal list-inside mt-2 space-y-1 text-gray-700"><li>「顧客名を入力」欄にお客様の名前を入力します。</li><li>「新規案件 開始」ボタンをクリックします。</li><li>確認ダイアログが表示されたら「OK」を押します。案件が作成され、編集可能になります。</li></ol></div><div><h3 class="text-lg font-semibold">既存の案件を読み込む場合</h3><ol class="list-decimal list-inside mt-2 space-y-1 text-gray-700"><li>「案件読込」ボタンをクリックします。</li><li>案件リストが表示されるので、読み込みたい案件をクリックします。</li><li>過去に保存した仕様が画面に表示されます。</li></ol></div></div></section>
+                <section><h2 class="text-2xl font-semibold border-b pb-3 mb-4 text-green-700">2. 商品の選択</h2><div class="space-y-4 text-gray-700"><ol class="list-decimal list-inside space-y-2"><li>左側の「1. 項目選択」から、仕様を決定したいカテゴリ（例：キッチン、バス）のボタンをクリックします。</li><li>商品選択画面が表示されます。メーカー名などで商品を絞り込むことも可能です。</li><li>追加したい商品をクリックしてハイライト（青い枠線）させます。</li><li>商品の施工事例が下部に表示されるので、参考にしてください。</li><li>画面右下の「この商品を選択」ボタンをクリックします。</li><li>確認ダイアログが表示されたら「OK」を押すと、右側の「2. 仕様一覧」に商品が追加されます。</li></ol></div></section>
+                <section><h2 class="text-2xl font-semibold border-b pb-3 mb-4 text-purple-700">3. 仕様の編集と保存</h2><div class="space-y-4 text-gray-700"><ol class="list-decimal list-inside space-y-2"><li>「仕様一覧」に追加された各商品について、「数量」や「使用場所・メモ」を自由に変更できます。</li><li>「一時保存」ボタンを押すと、現在の仕様がスプレッドシートに保存されます。こまめな保存を推奨します。</li><li>「履歴確認」ボタンから、過去に保存した時点の仕様を確認したり、その状態に戻したりすることができます。</li></ol></div></section>
+                <section><h2 class="text-2xl font-semibold border-b pb-3 mb-4 text-red-700">4. 承認とPDF出力</h2><div class="space-y-4 text-gray-700"><ol class="list-decimal list-inside space-y-2"><li>すべての仕様が確定したら、「承認サイン」ボタンを押してお客様からサインをいただきます。</li><li>「プランシート作成 (PDF)」ボタンを押すと、署名付きの仕様書がPDFとして生成されます。</li><li>生成されたPDFは、案件ごとのGoogle Driveフォルダに自動で保存されます。</li></ol></div></section>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <script>
+    function showManual() {
+        document.getElementById('manual-modal').classList.remove('hidden');
+    }
+  </script>
+
+</body>
+</html>
