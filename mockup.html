@@ -5,9 +5,7 @@
     <title>住宅内装仕様書 管理アプリ (インタラクティブ・モックアップ)</title>
     <style>
         /* [エラーを防ぐフロントエンド開発ガイド] P.3 防御的プログラミングの考え方を応用 */
-        /* 画面幅に応じて基本の文字サイズを滑らかに変動させることで、様々なデバイスサイズに対応します */
         html {
-            /* 最小14px、基本は画面幅の1.5% + 0.5rem、最大18pxに設定 */
             font-size: clamp(14px, 1.5vw + 0.5rem, 18px);
         }
 
@@ -16,11 +14,17 @@
         body { background-color: #f4f7f9; line-height: 1.6; }
         header { background-color: #ffffff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; }
         header h1 { font-size: 1.5rem; color: #333; }
-        main { padding: 2rem; }
+        
+        /* [エラーを防ぐフロントエンド開発ガイド] P.8 認知負荷の軽減 に基づく修正 */
+        main {
+            padding: 2rem; /* 上下のpaddingは既存の値を維持 */
+            max-width: 1200px; /* コンテンツの最大幅を設定 */
+            margin: 0 auto; /* 左右の余白を自動調整して中央寄せ */
+        }
+
         footer { text-align: center; padding: 1rem; font-size: 0.8rem; color: #888; }
         .hidden { display: none !important; }
 
-        /* ボタンや入力フォームのpaddingもrem単位に統一し、全体のスケールに追従させます */
         button, input[type="text"], input[type="date"], select { min-height: 44px; padding: 0.5rem 0.75rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
         button { cursor: pointer; background-color: #fff; }
         button:hover { background-color: #f0f0f0; }
@@ -79,7 +83,16 @@
         .form-row { margin-bottom: 1rem; }
         .form-row label { display: block; margin-bottom: 0.5rem; }
         .modal-actions { margin-top: 1.5rem; text-align: right; }
-        @media (max-width: 768px) { main { padding: 1rem; } header { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 1rem; } .detail-header { padding: 1rem; } .detail-body { flex-direction: column; } #spec-nav { flex: 1 0 auto; width: 100%; white-space: nowrap; overflow-x: auto; border-right: none; border-bottom: 1px solid #e0e0e0; padding: 0; } .nav-item { display: inline-block; margin-bottom: 0; border-bottom: 3px solid transparent; border-radius: 0; padding: 15px; } .nav-item.active { border-bottom-color: #007bff; background-color: transparent; color: #007bff; } #spec-content { max-height: none; } #back-to-list-button { width: 60px; height: 60px; } }
+        @media (max-width: 768px) { 
+            main { padding: 1rem; }
+            header { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 1rem; } 
+            .detail-header { padding: 1rem; } .detail-body { flex-direction: column; } 
+            #spec-nav { flex: 1 0 auto; width: 100%; white-space: nowrap; overflow-x: auto; border-right: none; border-bottom: 1px solid #e0e0e0; padding: 0; } 
+            .nav-item { display: inline-block; margin-bottom: 0; border-bottom: 3px solid transparent; border-radius: 0; padding: 15px; } 
+            .nav-item.active { border-bottom-color: #007bff; background-color: transparent; color: #007bff; } 
+            #spec-content { max-height: none; } 
+            #back-to-list-button { width: 60px; height: 60px; } 
+        }
     </style>
 </head>
 <body>
