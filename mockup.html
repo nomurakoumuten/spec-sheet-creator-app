@@ -1,178 +1,185 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <base target="_top">
-  <title>住宅内装仕様書 管理アプリ (インタラクティブ・モックアップ)</title>
-  <style>
-    /* CSSは変更ありませんので、前のコードと同じです */
-    body, h1, h2, p, label { margin: 0; padding: 0; font-family: sans-serif; box-sizing: border-box; }
-    body { background-color: #f4f7f9; font-size: 16px; line-height: 1.6; }
-    header { background-color: #ffffff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; }
-    header h1 { font-size: 1.5rem; color: #333; }
-    main { padding: 2rem; }
-    footer { text-align: center; padding: 1rem; font-size: 0.8rem; color: #888; }
-    .hidden { display: none !important; }
-    button, input[type="text"], input[type="date"], select { min-height: 44px; padding: 8px 12px; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    button { cursor: pointer; background-color: #fff; }
-    button:hover { background-color: #f0f0f0; }
-    button:disabled { cursor: not-allowed; background-color: #e9ecef; opacity: 0.7; }
-    .case-card { background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); cursor: pointer; transition: box-shadow 0.2s; }
-    .case-card:hover { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
-    .status-tags { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
-    .status-tag { font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 12px; font-weight: bold; }
-    .status-tag.design { background-color: #e7f3ff; color: #007bff; }
-    .status-tag.ic { background-color: #e8f5e9; color: #2e7d32; }
-    .filter-container { background-color: #fff; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #e0e0e0; display: flex; flex-direction: column; gap: 1.5rem; }
-    .filter-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem 1.5rem; align-items: end; }
-    .filter-group { display: flex; flex-direction: column; }
-    .filter-group label { font-size: 0.85rem; font-weight: bold; color: #555; margin-bottom: 0.5rem; }
-    .filter-group.date-range div { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 0.5rem; }
-    .filter-actions { display: flex; gap: 1rem; justify-content: flex-end; }
-    #apply-filters-btn { background-color: #007bff; color: white; border: none; }
-    #case-detail-view { padding: 0; }
-    .detail-header { padding: 1rem 2rem; background-color: #fff; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
-    .case-info { flex: 1 1 auto; }
-    .case-info #detail-status-display { margin-top: 0.5rem; }
-    .detail-actions-area { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; flex: 2 1 600px; justify-content: flex-end; }
-    .version-history-area, #initial-setting-area { display: flex; align-items: center; gap: 0.5rem; }
-    .version-history-area label, #initial-setting-area label { font-weight: bold; white-space: nowrap; }
-    .main-actions { display: flex; gap: 1rem; }
-    .detail-body { display: flex; }
-    #spec-nav { flex: 0 0 200px; background-color: #f8f9fa; border-right: 1px solid #e0e0e0; padding: 15px; }
-    .nav-item { display: block; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-bottom: 5px; border: 1px solid transparent; text-decoration: none; color: #333; }
-    .nav-item:hover { background-color: #e9ecef; }
-    .nav-item.active { background-color: #007bff; color: white; }
-    #spec-content { flex: 1; padding: 20px; max-height: calc(100vh - 225px); overflow-y: auto; }
-    #back-to-list-button { position: fixed; bottom: 20px; right: 20px; z-index: 1000; background-color: #6c757d; color: white; border: none; border-radius: 50%; width: 70px; height: 70px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; justify-content: center; align-items: center; }
-    .back-icon { font-size: 1.5rem; line-height: 1; }
-    #back-to-list-button span { font-size: 0.7rem; line-height: 1.2; }
-    .form-group { background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; }
-    .form-group h3 { margin-top: 0; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px; }
-    .form-field { margin-bottom: 15px; }
-    .form-field>label { display: block; font-weight: bold; margin-bottom: 10px; }
-    .spec-rows-container { margin-top: 5px; }
-    .spec-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px; border-radius: 4px; margin-bottom: 10px; border: 1px solid #eee; background-color: #fafafa; }
-    .spec-row select, .spec-row input[type="text"] { padding: 8px; border-radius: 4px; border: 1px solid #ccc; min-height: 40px; flex: 1 1 180px; }
-    .spec-input-text { width: 100%; }
-    .add-row-btn, .delete-row-btn { padding: 4px 8px; font-size: 0.8rem; border-radius: 4px; cursor: pointer; border: 1px solid; min-height: auto; }
-    .add-row-btn { border-color: #007bff; background-color: #e7f3ff; color: #007bff; margin-top: 10px; }
-    .delete-row-btn { border-color: #dc3545; background-color: #f8d7da; color: #721c24; margin-left: auto; flex-shrink: 0; }
-    #initial-setting-area { display: flex; align-items: center; gap: 10px; }
-    #initial-setting-area label { font-weight: bold; }
-    #apply-filters-btn, #apply-setting-btn { background-color: #007bff; color: white; border: none; }
-    #save-data-btn { background-color: #28a745; color: white; border: none; font-weight: bold; }
-    #export-doc-btn { background-color: #ffc107; color: #212529; border: none; font-weight: bold; }
-    .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    #show-new-case-modal-btn { background-color: #007bff; color: white; font-weight: bold; border: none; }
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 2000; }
-    .modal-content { background-color: white; padding: 2rem; border-radius: 8px; width: 90%; max-width: 500px; }
-    .modal-content h3 { margin-top: 0; margin-bottom: 1.5rem; }
-    .form-row { margin-bottom: 1rem; }
-    .form-row label { display: block; margin-bottom: 0.5rem; }
-    .modal-actions { margin-top: 1.5rem; text-align: right; }
-    @media (max-width: 768px) { main { padding: 1rem; } header { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 1rem; } .detail-header { padding: 1rem; } .detail-body { flex-direction: column; } #spec-nav { flex: 1 0 auto; width: 100%; white-space: nowrap; overflow-x: auto; border-right: none; border-bottom: 1px solid #e0e0e0; padding: 0; } .nav-item { display: inline-block; margin-bottom: 0; border-bottom: 3px solid transparent; border-radius: 0; padding: 15px; } .nav-item.active { border-bottom-color: #007bff; background-color: transparent; color: #007bff; } #spec-content { max-height: none; } #back-to-list-button { width: 60px; height: 60px; } }
-  </style>
+    <base target="_top">
+    <title>住宅内装仕様書 管理アプリ (インタラクティブ・モックアップ)</title>
+    <style>
+        /* [エラーを防ぐフロントエンド開発ガイド] P.3 防御的プログラミングの考え方を応用 */
+        /* 画面幅に応じて基本の文字サイズを滑らかに変動させることで、様々なデバイスサイズに対応します */
+        html {
+            /* 最小14px、基本は画面幅の1.5% + 0.5rem、最大18pxに設定 */
+            font-size: clamp(14px, 1.5vw + 0.5rem, 18px);
+        }
+
+        /* 基本的なスタイルリセット */
+        body, h1, h2, p, label { margin: 0; padding: 0; font-family: sans-serif; box-sizing: border-box; }
+        body { background-color: #f4f7f9; line-height: 1.6; }
+        header { background-color: #ffffff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; }
+        header h1 { font-size: 1.5rem; color: #333; }
+        main { padding: 2rem; }
+        footer { text-align: center; padding: 1rem; font-size: 0.8rem; color: #888; }
+        .hidden { display: none !important; }
+
+        /* ボタンや入力フォームのpaddingもrem単位に統一し、全体のスケールに追従させます */
+        button, input[type="text"], input[type="date"], select { min-height: 44px; padding: 0.5rem 0.75rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { cursor: pointer; background-color: #fff; }
+        button:hover { background-color: #f0f0f0; }
+        button:disabled { cursor: not-allowed; background-color: #e9ecef; opacity: 0.7; }
+        .case-card { background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); cursor: pointer; transition: box-shadow 0.2s; }
+        .case-card:hover { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .status-tags { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
+        .status-tag { font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 12px; font-weight: bold; }
+        .status-tag.design { background-color: #e7f3ff; color: #007bff; }
+        .status-tag.ic { background-color: #e8f5e9; color: #2e7d32; }
+        .filter-container { background-color: #fff; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #e0e0e0; display: flex; flex-direction: column; gap: 1.5rem; }
+        .filter-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem 1.5rem; align-items: end; }
+        .filter-group { display: flex; flex-direction: column; }
+        .filter-group label { font-size: 0.85rem; font-weight: bold; color: #555; margin-bottom: 0.5rem; }
+        .filter-group.date-range div { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 0.5rem; }
+        .filter-actions { display: flex; gap: 1rem; justify-content: flex-end; }
+        #apply-filters-btn { background-color: #007bff; color: white; border: none; }
+        #case-detail-view { padding: 0; }
+        .detail-header { padding: 1rem 2rem; background-color: #fff; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
+        .case-info { flex: 1 1 auto; }
+        .case-info #detail-status-display { margin-top: 0.5rem; }
+        .detail-actions-area { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; flex: 2 1 600px; justify-content: flex-end; }
+        .version-history-area, #initial-setting-area { display: flex; align-items: center; gap: 0.5rem; }
+        .version-history-area label, #initial-setting-area label { font-weight: bold; white-space: nowrap; }
+        .main-actions { display: flex; gap: 1rem; }
+        .detail-body { display: flex; }
+        #spec-nav { flex: 0 0 200px; background-color: #f8f9fa; border-right: 1px solid #e0e0e0; padding: 15px; }
+        .nav-item { display: block; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-bottom: 5px; border: 1px solid transparent; text-decoration: none; color: #333; }
+        .nav-item:hover { background-color: #e9ecef; }
+        .nav-item.active { background-color: #007bff; color: white; }
+        #spec-content { flex: 1; padding: 20px; max-height: calc(100vh - 225px); overflow-y: auto; }
+        #back-to-list-button { position: fixed; bottom: 20px; right: 20px; z-index: 1000; background-color: #6c757d; color: white; border: none; border-radius: 50%; width: 70px; height: 70px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .back-icon { font-size: 1.5rem; line-height: 1; }
+        #back-to-list-button span { font-size: 0.7rem; line-height: 1.2; }
+        .form-group { background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; }
+        .form-group h3 { margin-top: 0; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px; }
+        .form-field { margin-bottom: 15px; }
+        .form-field>label { display: block; font-weight: bold; margin-bottom: 10px; }
+        .spec-rows-container { margin-top: 5px; }
+        .spec-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px; border-radius: 4px; margin-bottom: 10px; border: 1px solid #eee; background-color: #fafafa; }
+        .spec-row select, .spec-row input[type="text"] { padding: 8px; border-radius: 4px; border: 1px solid #ccc; min-height: 40px; flex: 1 1 180px; }
+        .spec-input-text { width: 100%; }
+        .add-row-btn, .delete-row-btn { padding: 4px 8px; font-size: 0.8rem; border-radius: 4px; cursor: pointer; border: 1px solid; min-height: auto; }
+        .add-row-btn { border-color: #007bff; background-color: #e7f3ff; color: #007bff; margin-top: 10px; }
+        .delete-row-btn { border-color: #dc3545; background-color: #f8d7da; color: #721c24; margin-left: auto; flex-shrink: 0; }
+        #initial-setting-area { display: flex; align-items: center; gap: 10px; }
+        #initial-setting-area label { font-weight: bold; }
+        #apply-filters-btn, #apply-setting-btn { background-color: #007bff; color: white; border: none; }
+        #save-data-btn { background-color: #28a745; color: white; border: none; font-weight: bold; }
+        #export-doc-btn { background-color: #ffc107; color: #212529; border: none; font-weight: bold; }
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        #show-new-case-modal-btn { background-color: #007bff; color: white; font-weight: bold; border: none; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background-color: white; padding: 2rem; border-radius: 8px; width: 90%; max-width: 500px; }
+        .modal-content h3 { margin-top: 0; margin-bottom: 1.5rem; }
+        .form-row { margin-bottom: 1rem; }
+        .form-row label { display: block; margin-bottom: 0.5rem; }
+        .modal-actions { margin-top: 1.5rem; text-align: right; }
+        @media (max-width: 768px) { main { padding: 1rem; } header { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 1rem; } .detail-header { padding: 1rem; } .detail-body { flex-direction: column; } #spec-nav { flex: 1 0 auto; width: 100%; white-space: nowrap; overflow-x: auto; border-right: none; border-bottom: 1px solid #e0e0e0; padding: 0; } .nav-item { display: inline-block; margin-bottom: 0; border-bottom: 3px solid transparent; border-radius: 0; padding: 15px; } .nav-item.active { border-bottom-color: #007bff; background-color: transparent; color: #007bff; } #spec-content { max-height: none; } #back-to-list-button { width: 60px; height: 60px; } }
+    </style>
 </head>
-
 <body>
-  <header>
-    <h1>住宅内装仕様書 管理アプリ</h1>
-    <div class="user-info">
-      <span id="user-name-display">ログインユーザー: 鈴木 一郎</span>
-      <button id="logout-button">ログアウト</button>
-    </div>
-  </header>
+    <header>
+        <h1>住宅内装仕様書 管理アプリ</h1>
+        <div class="user-info">
+            <span id="user-name-display">ログインユーザー: 鈴木 一郎</span>
+            <button id="logout-button">ログアウト</button>
+        </div>
+    </header>
 
-  <main id="case-list-view">
-    <div class="list-header">
-      <h2>案件一覧</h2>
-      <button id="show-new-case-modal-btn">＋ 新規案件作成</button>
+    <main id="case-list-view">
+        <div class="list-header">
+            <h2>案件一覧</h2>
+            <button id="show-new-case-modal-btn">＋ 新規案件作成</button>
+        </div>
+        <div class="filter-container">
+            <div class="filter-inputs">
+                <div class="filter-group"><label for="filter-customer-name">お客様名</label><input type="text" id="filter-customer-name" placeholder="部分一致で検索"></div>
+                <div class="filter-group"><label for="filter-department">部署</label><select id="filter-department"><option value="">すべて</option><option value="設計">設計</option><option value="IC">IC</option></select></div>
+                <div class="filter-group"><label for="filter-assignee">担当者</label><select id="filter-assignee"><option value="">すべて</option><option value="suzuki@example.com">鈴木 一郎</option><option value="tanaka@example.com">田中 花子</option></select></div>
+                <div class="filter-group"><label for="filter-design-status">設計ステータス</label><select id="filter-design-status"><option value="">すべて</option><option value="作成中">作成中</option><option value="確認依頼中">確認依頼中</option><option value="完了">完了</option></select></div>
+                <div class="filter-group"><label for="filter-ic-status">ICステータス</label><select id="filter-ic-status"><option value="">すべて</option><option value="未着手">未着手</option><option value="コーディネート中">コーディネート中</option><option value="完了">完了</option></select></div>
+                <div class="filter-group date-range"><label>作成日</label><div><input type="date" id="filter-created-from"><span>～</span><input type="date" id="filter-created-to"></div></div>
+                <div class="filter-group date-range"><label>最終更新日</label><div><input type="date" id="filter-updated-from"><span>～</span><input type="date" id="filter-updated-to"></div></div>
+            </div>
+            <div class="filter-actions"><button id="clear-filters-btn">クリア</button><button id="apply-filters-btn">絞り込み</button></div>
+        </div>
+        <div id="case-list-container">
+            <div class="case-card"><h3>株式会社サンプル様</h3><p>案件番号: A001</p><div class="status-tags"><span class="status-tag design">設計: 作成中</span><span class="status-tag ic">IC: 未着手</span></div></div>
+            <div class="case-card"><h3>山田ホームズ御一行様</h3><p>案件番号: A002</p><div class="status-tags"><span class="status-tag design">設計: 完了</span><span class="status-tag ic">IC: コーディネート中</span></div></div>
+            <div class="case-card"><h3>個人邸（佐藤様）</h3><p>案件番号: A003</p><div class="status-tags"><span class="status-tag design">設計: 完了</span><span class="status-tag ic">IC: 完了</span></div></div>
+        </div>
+    </main>
+    
+    <main id="case-detail-view" class="hidden">
+        <button id="back-to-list-button"><div class="back-icon">←</div><span>案件<br>一覧へ</span></button>
+        <div class="detail-header">
+            <div class="case-info"><h2 id="detail-customer-name">株式会社サンプル様</h2><p>案件番号: <span id="detail-case-number">A001</span></p><div id="detail-status-display"><div class="status-tags"><span class="status-tag design">設計: 作成中</span><span class="status-tag ic">IC: 未着手</span></div></div></div>
+            <div class="detail-actions-area">
+                <div class="version-history-area"><label for="version-history-select">バージョン履歴:</label><select id="version-history-select"><option value="3">v3: 2025/08/30 15:20 (鈴木 一郎)</option><option value="2">v2: 2025/08/29 11:00 (鈴木 一郎)</option><option value="1">v1: 2025/08/28 18:30 (田中 花子)</option></select></div>
+                <div id="initial-setting-area"><label for="initial-setting-select">初期値セット:</label><select id="initial-setting-select"><option value="">選択しない</option><option value="1">標準プランA</option><option value="2">高機能プランB</option></select><button id="apply-setting-btn">適用</button></div>
+                <div class="main-actions"><button id="save-data-btn">💾 保存</button><button id="export-doc-btn">📄 仕様書出力</button></div>
+            </div>
+        </div>
+        <div class="detail-body">
+            <nav id="spec-nav"><a class="nav-item active" data-group-name="建具">建具</a><a class="nav-item" data-group-name="キッチン">キッチン</a><a class="nav-item" data-group-name="浴室">浴室</a></nav>
+            <div id="spec-content"><div id="spec-form-container"><div class="form-group" id="group-建具"><h3>建具</h3><div class="form-field"><label>玄関ドア</label><div class="spec-rows-container"><div class="spec-row"><select data-level="0"><option>--- メーカー ---</option><option selected>LIXIL</option></select><select data-level="1"><option>--- シリーズ ---</option><option selected>ジエスタ2</option></select><select data-level="2"><option>--- 品番 ---</option><option selected>K4 M17型</option></select><button class="delete-row-btn">削除</button></div></div><button class="add-row-btn">＋ 追加</button></div><div class="form-field"><label>備考</label><input type="text" class="spec-input-text" value="親子ドア、色はクリエダーク"></div></div><div class="form-group hidden" id="group-キッチン"><h3>キッチン</h3></div></div></div>
+        </div>
+    </main>
+    
+    <div id="new-case-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>新規案件作成</h3>
+            <form id="new-case-form">
+                <div class="form-row"><label for="new-customer-name">お客様名</label><input type="text" id="new-customer-name" required></div>
+                <div class="form-row"><label for="new-property-name">物件名</label><input type="text" id="new-property-name" required></div>
+                <div class="form-row"><label for="new-担当者-select">担当者</label><select id="new-担当者-select" required></select></div>
+                <div class="modal-actions"><button type="button" id="cancel-new-case-btn">キャンセル</button><button type="submit">作成</button></div>
+            </form>
+        </div>
     </div>
-    <div class="filter-container">
-      <div class="filter-inputs">
-        <div class="filter-group"><label for="filter-customer-name">お客様名</label><input type="text" id="filter-customer-name" placeholder="部分一致で検索"></div>
-        <div class="filter-group"><label for="filter-department">部署</label><select id="filter-department"><option value="">すべて</option><option value="設計">設計</option><option value="IC">IC</option></select></div>
-        <div class="filter-group"><label for="filter-assignee">担当者</label><select id="filter-assignee"><option value="">すべて</option><option value="suzuki@example.com">鈴木 一郎</option><option value="tanaka@example.com">田中 花子</option></select></div>
-        <div class="filter-group"><label for="filter-design-status">設計ステータス</label><select id="filter-design-status"><option value="">すべて</option><option value="作成中">作成中</option><option value="確認依頼中">確認依頼中</option><option value="完了">完了</option></select></div>
-        <div class="filter-group"><label for="filter-ic-status">ICステータス</label><select id="filter-ic-status"><option value="">すべて</option><option value="未着手">未着手</option><option value="コーディネート中">コーディネート中</option><option value="完了">完了</option></select></div>
-        <div class="filter-group date-range"><label>作成日</label><div><input type="date" id="filter-created-from"><span>～</span><input type="date" id="filter-created-to"></div></div>
-        <div class="filter-group date-range"><label>最終更新日</label><div><input type="date" id="filter-updated-from"><span>～</span><input type="date" id="filter-updated-to"></div></div>
-      </div>
-      <div class="filter-actions"><button id="clear-filters-btn">クリア</button><button id="apply-filters-btn">絞り込み</button></div>
-    </div>
-    <div id="case-list-container">
-      <div class="case-card"><h3 >株式会社サンプル様</h3><p>案件番号: A001</p><div class="status-tags"><span class="status-tag design">設計: 作成中</span><span class="status-tag ic">IC: 未着手</span></div></div>
-      <div class="case-card"><h3 >山田ホームズ御一行様</h3><p>案件番号: A002</p><div class="status-tags"><span class="status-tag design">設計: 完了</span><span class="status-tag ic">IC: コーディネート中</span></div></div>
-      <div class="case-card"><h3 >個人邸（佐藤様）</h3><p>案件番号: A003</p><div class="status-tags"><span class="status-tag design">設計: 完了</span><span class="status-tag ic">IC: 完了</span></div></div>
-    </div>
-  </main>
-  
-  <main id="case-detail-view" class="hidden">
-    <button id="back-to-list-button"><div class="back-icon">←</div><span>案件<br>一覧へ</span></button>
-    <div class="detail-header">
-      <div class="case-info"><h2 id="detail-customer-name">株式会社サンプル様</h2><p>案件番号: <span id="detail-case-number">A001</span></p><div id="detail-status-display"><div class="status-tags"><span class="status-tag design">設計: 作成中</span><span class="status-tag ic">IC: 未着手</span></div></div></div>
-      <div class="detail-actions-area">
-        <div class="version-history-area"><label for="version-history-select">バージョン履歴:</label><select id="version-history-select"><option value="3">v3: 2025/08/30 15:20 (鈴木 一郎)</option><option value="2">v2: 2025/08/29 11:00 (鈴木 一郎)</option><option value="1">v1: 2025/08/28 18:30 (田中 花子)</option></select></div>
-        <div id="initial-setting-area"><label for="initial-setting-select">初期値セット:</label><select id="initial-setting-select"><option value="">選択しない</option><option value="1">標準プランA</option><option value="2">高機能プランB</option></select><button id="apply-setting-btn">適用</button></div>
-        <div class="main-actions"><button id="save-data-btn">💾 保存</button><button id="export-doc-btn">📄 仕様書出力</button></div>
-      </div>
-    </div>
-    <div class="detail-body">
-      <nav id="spec-nav"><a class="nav-item active" data-group-name="建具">建具</a><a class="nav-item" data-group-name="キッチン">キッチン</a><a class="nav-item" data-group-name="浴室">浴室</a></nav>
-      <div id="spec-content"><div id="spec-form-container"><div class="form-group" id="group-建具"><h3>建具</h3><div class="form-field"><label>玄関ドア</label><div class="spec-rows-container"><div class="spec-row"><select data-level="0"><option>--- メーカー ---</option><option selected>LIXIL</option></select><select data-level="1"><option>--- シリーズ ---</option><option selected>ジエスタ2</option></select><select data-level="2"><option>--- 品番 ---</option><option selected>K4 M17型</option></select><button class="delete-row-btn">削除</button></div></div><button class="add-row-btn">＋ 追加</button></div><div class="form-field"><label>備考</label><input type="text" class="spec-input-text" value="親子ドア、色はクリエダーク"></div></div><div class="form-group hidden" id="group-キッチン"><h3>キッチン</h3></div></div></div>
-    </div>
-  </main>
-  
-  <div id="new-case-modal" class="modal-overlay hidden">
-    <div class="modal-content">
-      <h3>新規案件作成</h3>
-      <form id="new-case-form">
-        <div class="form-row"><label for="new-customer-name">お客様名</label><input type="text" id="new-customer-name" required></div>
-        <div class="form-row"><label for="new-property-name">物件名</label><input type="text" id="new-property-name" required></div>
-        <div class="form-row"><label for="new-担当者-select">担当者</label><select id="new-担当者-select" required></select></div>
-        <div class="modal-actions"><button type="button" id="cancel-new-case-btn">キャンセル</button><button type="submit">作成</button></div>
-      </form>
-    </div>
-  </div>
 
-  <div id="status-update-modal" class="modal-overlay hidden">
-    <div class="modal-content">
-      <h3>ステータスを更新</h3>
-      <p>保存が完了しました。案件のステータスを更新しますか？</p>
-      <div class="form-row"><label for="status-update-select">新しいステータス</label><select id="status-update-select"></select></div>
-      <div class="modal-actions"><button type="button" id="cancel-status-update-btn">更新しない</button><button type="button" id="confirm-status-update-btn">更新する</button></div>
+    <div id="status-update-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>ステータスを更新</h3>
+            <p>保存が完了しました。案件のステータスを更新しますか？</p>
+            <div class="form-row"><label for="status-update-select">新しいステータス</label><select id="status-update-select"></select></div>
+            <div class="modal-actions"><button type="button" id="cancel-status-update-btn">更新しない</button><button type="button" id="confirm-status-update-btn">更新する</button></div>
+        </div>
     </div>
-  </div>
-  
-  <footer>
-    <p>&copy; 2025 あなたの会社名</p>
-  </footer>
+    
+    <footer>
+        <p>&copy; 2025 あなたの会社名</p>
+    </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const caseListView = document.getElementById('case-list-view');
-      const caseDetailView = document.getElementById('case-detail-view');
-      const caseCards = document.querySelectorAll('.case-card');
-      const backToListButton = document.getElementById('back-to-list-button');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const caseListView = document.getElementById('case-list-view');
+            const caseDetailView = document.getElementById('case-detail-view');
+            const caseCards = document.querySelectorAll('.case-card');
+            const backToListButton = document.getElementById('back-to-list-button');
 
-      function showDetailView() {
-        caseListView.classList.add('hidden');
-        caseDetailView.classList.remove('hidden');
-        window.scrollTo(0, 0); // 画面のトップにスクロール
-      }
+            function showDetailView() {
+                caseListView.classList.add('hidden');
+                caseDetailView.classList.remove('hidden');
+                window.scrollTo(0, 0); // 画面のトップにスクロール
+            }
 
-      function showListView() {
-        caseDetailView.classList.add('hidden');
-        caseListView.classList.remove('hidden');
-      }
+            function showListView() {
+                caseDetailView.classList.add('hidden');
+                caseListView.classList.remove('hidden');
+            }
 
-      caseCards.forEach(card => {
-        card.addEventListener('click', showDetailView);
-      });
+            caseCards.forEach(card => {
+                card.addEventListener('click', showDetailView);
+            });
 
-      backToListButton.addEventListener('click', showListView);
-    });
-  </script>
-  </body>
+            backToListButton.addEventListener('click', showListView);
+        });
+    </script>
+</body>
 </html>
